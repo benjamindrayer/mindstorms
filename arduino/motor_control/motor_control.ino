@@ -1,27 +1,10 @@
+extern "C" 
+{ 
+#include "src/cli.h"
+}
+#define WWW 1
 #define MAX_CMD_LENGTH   128
 
-void stearMotor1(const char* prt)
-               {
-               }
-void motorStatus1(const char* prt)
-               {
-               }
-
-#define CMD_LIBRARY {{"MOTOR_SET", 2, stearMotor1},\
-                     {"MOTOR_GET", 1, motorStatus1}}
-
-#define CMD_LIBRARY_SIZE  2
-
-typedef void (*myfun)(const char*);
-
-typedef struct
-{
-  const char* pName;
-  int nArguments;
-  myfun pFunction;
-} cliCommand;
-
-cliCommand allCmds[] = CMD_LIBRARY;
 
 void setup() 
 {
@@ -68,13 +51,13 @@ int processCommand(char* pData,
     {
       for(int j=0;j<CMD_LIBRARY_SIZE;j++)
       {
-        Serial.println(allCmds[j].pName);
-        if(strlen(allCmds[j].pName) == i)
-        {
-          Serial.println("CMD: Found");
-          cmdIndex = j;
-          break;
-        }
+//        Serial.println(allCmds[j].pName);
+//        if(strlen(allCmds[j].pName) == i)
+//        {
+//          Serial.println("CMD: Found");
+//          cmdIndex = j;
+//          break;
+//        }
       }
       break;
     }
@@ -85,6 +68,15 @@ int processCommand(char* pData,
     Serial.println("CMD: Not Found");    
   }
   return 0;
+}
+
+void serialPrint(const char* pData)
+{
+  while(*pData)
+  {
+    Serial.print(*pData);
+    pData++;
+  }
 }
 
 void loop() 
@@ -98,6 +90,7 @@ void loop()
     {
       processCommand(aCmd, length);
     }
-  delay(1000);
+    CLI_help(serialPrint);
+    delay(1000);
   }
 }
