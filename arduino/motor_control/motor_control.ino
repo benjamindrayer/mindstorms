@@ -40,36 +40,6 @@ int stearMotor(const int motorId,
   return 0;
 }
 
-int processCommand(char* pData, 
-                   const int maxLength)
-{
-  int i = 0;
-  int cmdIndex = -1;
-  while(i<maxLength)
-  {
-    if(pData[i] == ' ')
-    {
-      for(int j=0;j<CMD_LIBRARY_SIZE;j++)
-      {
-//        Serial.println(allCmds[j].pName);
-//        if(strlen(allCmds[j].pName) == i)
-//        {
-//          Serial.println("CMD: Found");
-//          cmdIndex = j;
-//          break;
-//        }
-      }
-      break;
-    }
-    i++;
-  }
-  if(cmdIndex==-1)
-  {
-    Serial.println("CMD: Not Found");    
-  }
-  return 0;
-}
-
 void serialPrint(const char* pData)
 {
   while(*pData)
@@ -81,6 +51,7 @@ void serialPrint(const char* pData)
 
 void loop() 
 {
+  CLI_setPrintFunction(serialPrint);
   char aCmd[MAX_CMD_LENGTH];
   // put your main code here, to run repeatedly:
   while(1)
@@ -88,9 +59,8 @@ void loop()
     int length = readCommand(aCmd, MAX_CMD_LENGTH);
     if(length > 0)
     {
-      processCommand(aCmd, length);
+      CLI_process(aCmd);
     }
-    CLI_help(serialPrint);
     delay(1000);
   }
 }
