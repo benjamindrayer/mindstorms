@@ -1,6 +1,7 @@
 extern "C" 
 { 
 #include "src/cli.h"
+#include "src/tools.h"
 }
 #define WWW 1
 #define MAX_CMD_LENGTH   128
@@ -14,6 +15,7 @@ void setup()
   {
     ; // wait for serial port to connect. Needed for Native USB only
   }
+  TOOL_setPrintCommand(serialPrint);
 }
 
 
@@ -51,7 +53,6 @@ void serialPrint(const char* pData)
 
 void loop() 
 {
-  CLI_setPrintFunction(serialPrint);
   char aCmd[MAX_CMD_LENGTH];
   // put your main code here, to run repeatedly:
   while(1)

@@ -3,6 +3,7 @@
 #ifndef CLI_H
 #define CLI_H
 #include "motor_control.h"
+#include "tools.h"
 
 typedef void (*CLI_Function_t)(const char*);
 
@@ -25,6 +26,5 @@ void CLI_HELP(const char* pArguments);
 
 #define CMD_LIBRARY_SIZE  3
 
-void CLI_setPrintFunction(CLI_Function_t pPrintFunction);
 void CLI_process(const char* pCommand);
 #endif

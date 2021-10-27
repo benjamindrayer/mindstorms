@@ -2,22 +2,16 @@
 #include <string.h>
 
 CLI_Command_t allCmds[] = CMD_LIBRARY;
-CLI_Function_t printFunction = NULL;
-
-void CLI_setPrintFunction(CLI_Function_t pPrintFunction)
-{
-    printFunction = pPrintFunction;
-}
 
 void CLI_help()
 {
-    printFunction("============================================\n");
+    TOOL_print("============================================\n");
     for(int i = 0; i < CMD_LIBRARY_SIZE; i++)
     {
-        printFunction(allCmds[i].pName);
-        printFunction("\n");
-        printFunction(allCmds[i].pHelp);
-        printFunction("\n");
+        TOOL_print(allCmds[i].pName);
+        TOOL_print("\n");
+        TOOL_print(allCmds[i].pHelp);
+        TOOL_print("\n");
     }
 }
 
