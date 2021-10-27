@@ -1,7 +1,17 @@
 #ifndef TOOLS_H
 #define TOOLS_H
+#include <stdint.h>
 
 typedef void (*TOOLS_PrintFunction_t)(const char*);
+typedef void (*TOOLS_AnalogWriteFunction_t)(uint8_t, int);
+typedef void (*TOOLS_DigitalWriteFunction_t)(uint8_t, uint8_t);
+
+void TOOL_setAnalogWriteFunction(TOOLS_AnalogWriteFunction_t);
+void TOOL_setDigitalWriteFunction(TOOLS_DigitalWriteFunction_t);
+
+void TOOL_writeAnalog(int pin, int value); 
+void TOOL_writeDigital(int pin, int value); 
+
 void TOOL_setPrintCommand(TOOLS_PrintFunction_t);
 void TOOL_print(const char* pData);
 

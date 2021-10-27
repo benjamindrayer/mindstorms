@@ -1,3 +1,18 @@
+typedef struct
+{
+    int id;
+    int speed;
+    int position;
+    int enablePin;  //PWN
+    int input1Pin;  //H-Bridge
+    int input2Pin;  //H-Bridge
+}
+ MOTOR_Motor_t;
+
+void MOTOR_config(int motor_id,
+                  int pinEnable,
+                  int pin1,
+                  int pin2);
 
 void CLI_MOTOR_set(const char* pArguments);
 #define CLI_MOTOR_SET_CMD_NAME "MOTOR_SET"

@@ -2,11 +2,41 @@
 #include <string.h>
 
 TOOLS_PrintFunction_t printFunction = NULL;
+TOOLS_AnalogWriteFunction_t analogWriteFunction = NULL;
+TOOLS_DigitalWriteFunction_t digitalWriteFunction = NULL;
+
+/////////////////////////////////////////////////////////////////////////////////
+// I/O
+/////////////////////////////////////////////////////////////////////////////////
+void TOOL_setAnalogWriteFunction(TOOLS_AnalogWriteFunction_t pAnalogWrite)
+{
+    analogWriteFunction = pAnalogWrite;
+}
+
+void TOOL_setDigitalWriteFunction(TOOLS_DigitalWriteFunction_t pDigitalWrite)
+{
+    digitalWriteFunction = pDigitalWrite;
+}
+
+void TOOL_writeAnalog(int pin, int value)
+{
+    analogWriteFunction(pin, value);
+}
+
+void TOOL_writeDigital(int pin, int value)
+{
+    digitalWriteFunction(pin, value);
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// Printing 
+/////////////////////////////////////////////////////////////////////////////////
 
 void TOOL_setPrintCommand(TOOLS_PrintFunction_t pPrintFunction)
 {
     printFunction = pPrintFunction;
 }
+
 void TOOL_print(const char* pData)
 {
     if(printFunction)
@@ -19,9 +49,11 @@ int TOOL_parseArgument(const char* pString,
                        char* pArgument)
 {
     int index = 0;
+    int offset = 0;
     while(*pString == ' ')
     {
         pString++;
+        offset++;
     }
     while(pString)
     {
@@ -34,5 +66,5 @@ int TOOL_parseArgument(const char* pString,
         index++;
     }
     pArgument[index] = 0;
-    return index;
+    return index + offset;
 }

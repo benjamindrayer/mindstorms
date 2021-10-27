@@ -16,6 +16,11 @@ void setup()
     ; // wait for serial port to connect. Needed for Native USB only
   }
   TOOL_setPrintCommand(serialPrint);
+  TOOL_setAnalogWriteFunction(analogWrite);
+  TOOL_setDigitalWriteFunction(digitalWrite);
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  MOTOR_config(0, 11, 2, 3);
 }
 
 
