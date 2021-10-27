@@ -18,9 +18,14 @@ void setup()
   TOOL_setPrintCommand(serialPrint);
   TOOL_setAnalogWriteFunction(analogWrite);
   TOOL_setDigitalWriteFunction(digitalWrite);
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  MOTOR_config(0, 11, 2, 3);
+  TOOL_setDigitalReadFunction(digitalRead);
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  MOTOR_config(0, 2, 3, 4, 5, 11);
+  attachInterrupt(digitalPinToInterrupt(2), MOTOR_updatePosition, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(3), MOTOR_updatePosition, CHANGE);
 }
 
 
@@ -39,12 +44,6 @@ int readCommand(char* pData,
     readBytes++;
   }
   return readBytes;
-}
-
-int stearMotor(const int motorId,
-               const int speed)
-{
-  return 0;
 }
 
 void serialPrint(const char* pData)
@@ -67,6 +66,6 @@ void loop()
     {
       CLI_process(aCmd);
     }
-    delay(1000);
+    delay(10);
   }
 }

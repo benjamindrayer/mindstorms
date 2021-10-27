@@ -7,6 +7,8 @@ typedef struct
                     ///<                                00 -> STOP
                     ///<                                11 -> STOP
     //Inputs
+    int pinEncoder0;    ///< Pin0 and Pin1 of the rotationary encoder
+    int pinEncoder1;
 }
 MOTOR_MotorConfig_t;
 
@@ -16,15 +18,19 @@ typedef struct
     int speed;
     int currentPosition;    //
     int targetPosition;     //
+    int encoderValue;
     int direction;          //direction
     MOTOR_MotorConfig_t config;     //PinConfiguration
 }
  MOTOR_Motor_t;
 
 void MOTOR_config(int motor_id,
-                  int pinEnable,
+                  int rotEncoder0,
+                  int rotEncoder1,
                   int pin1,
-                  int pin2);
+                  int pin2,
+                  int pinEnable);
+
 
 void CLI_MOTOR_set(const char* pArguments);
 #define CLI_MOTOR_SET_CMD_NAME "motor_set"
@@ -40,3 +46,5 @@ void CLI_MOTOR_get(const char* pArguments);
 motor_get [motor_id] gets the status of the motor with motor_id\n \
           motor_id: 0,...,n\n"
 #define CLI_MOTOR_GET_CMD_NARGS 1
+
+void MOTOR_updatePosition();

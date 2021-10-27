@@ -7,13 +7,54 @@
 MOTOR_Motor_t motors[MAX_MOTORS];
 
 void MOTOR_config(int motor_id,
-                  int pinEnable,
+                  int rotEncoder0,
+                  int rotEncoder1,
                   int pin1,
-                  int pin2)
+                  int pin2,
+                  int pinEnable)
 {
     motors[motor_id].config.pinEnable = pinEnable;
     motors[motor_id].config.pinInput0 = pin1;
     motors[motor_id].config.pinInput1 = pin2;
+    motors[motor_id].config.pinEncoder0 = rotEncoder0;
+    motors[motor_id].config.pinEncoder1 = rotEncoder1;
+}
+
+int deltaC(int oldVal, int newVal)
+{
+    int factor = -1;
+    int oldBit1 = oldVal>>1;
+    int newBit1 = newVal>>1;
+    int oldBit0 = oldVal & 1;
+    int newBit0 = newVal & 1;
+    if(oldBit0 == newBit0)
+    {
+        int d = newBit1 - oldBit1;
+        if(oldBit0 == 1)
+        {
+            d *= -1;
+        }
+        return d;
+    }
+    if(oldBit1 == newBit1)
+    {
+        int d = newBit0 - oldBit0;
+        if(oldBit1 == 0)
+        {
+            d *= -1;
+        }
+        return d;
+    }
+}
+
+void MOTOR_updatePosition()
+{
+    int val0 = TOOL_readDigital(motors[0].config.pinEncoder0);
+    int val1 = TOOL_readDigital(motors[0].config.pinEncoder1);
+    int valueNew = val0<<1 | val1;
+    int d = deltaC(valueNew, motors[0].encoderValue);
+    motors[0].encoderValue = valueNew;
+    motors[0].currentPosition+=d;
 }
 
 void MOTOR_set_speed(int motor_id, 
@@ -60,6 +101,8 @@ void MOTOR_print(int motor_id)
     sprintf(aBuffer, " -speed: %i\n", motors[motor_id].speed);
     TOOL_print(aBuffer);
     sprintf(aBuffer, " -position: %i\n", motors[motor_id].currentPosition);
+    TOOL_print(aBuffer);
+    sprintf(aBuffer, " -encoder value: %i %i\n", motors[motor_id].encoderValue & 1, motors[motor_id].encoderValue>>1 & 1);
     TOOL_print(aBuffer);
 }
 

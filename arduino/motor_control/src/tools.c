@@ -4,6 +4,7 @@
 TOOLS_PrintFunction_t printFunction = NULL;
 TOOLS_AnalogWriteFunction_t analogWriteFunction = NULL;
 TOOLS_DigitalWriteFunction_t digitalWriteFunction = NULL;
+TOOLS_DigitalReadFunction_t digitalReadFunction = NULL;
 
 /////////////////////////////////////////////////////////////////////////////////
 // I/O
@@ -18,6 +19,11 @@ void TOOL_setDigitalWriteFunction(TOOLS_DigitalWriteFunction_t pDigitalWrite)
     digitalWriteFunction = pDigitalWrite;
 }
 
+void TOOL_setDigitalReadFunction(TOOLS_DigitalReadFunction_t pDigitalRead)
+{
+    digitalReadFunction = pDigitalRead;
+}
+
 void TOOL_writeAnalog(int pin, int value)
 {
     analogWriteFunction(pin, value);
@@ -26,6 +32,11 @@ void TOOL_writeAnalog(int pin, int value)
 void TOOL_writeDigital(int pin, int value)
 {
     digitalWriteFunction(pin, value);
+}
+
+int TOOL_readDigital(int pin)
+{
+    return digitalReadFunction(pin);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
