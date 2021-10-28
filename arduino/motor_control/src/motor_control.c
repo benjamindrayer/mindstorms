@@ -18,6 +18,7 @@ void MOTOR_config(int motor_id,
     motors[motor_id].config.pinInput1 = pin2;
     motors[motor_id].config.pinEncoder0 = rotEncoder0;
     motors[motor_id].config.pinEncoder1 = rotEncoder1;
+    motors[motor_id].freeRunMode = 1;
 }
 
 int deltaC(int oldVal, int newVal)
@@ -55,6 +56,19 @@ void MOTOR_updatePosition()
     int d = deltaC(valueNew, motors[0].encoderValue);
     motors[0].encoderValue = valueNew;
     motors[0].currentPosition+=d;
+    if(motors[0].freeRunMode==0)
+    {
+        if(motors[0].speed>0 && motors[0].targetPosition >= motors[0].currentPosition)
+        {
+            motors[0].freeRunMode = 1;
+            MOTOR_set_speed(0, 0);
+        }
+        if(motors[0].speed<0 && motors[0].targetPosition <= motors[0].currentPosition)
+        {
+            motors[0].freeRunMode = 1;
+            MOTOR_set_speed(0, 0);
+        }
+    }
 }
 
 void MOTOR_set_speed(int motor_id, 
@@ -91,6 +105,36 @@ void CLI_MOTOR_set(const char* pArguments)
     int len0 = TOOL_parseArgument(pArguments, aArgument0);
     int len1 = TOOL_parseArgument(&pArguments[len0], aArgument1);
     MOTOR_set_speed(atoi(aArgument0), atoi(aArgument1));
+}
+
+void MOTOR_rotate(int motor_id, int degrees)
+{
+    if(degrees == 0)
+    {
+        return;
+    }
+    //Target Position
+    motors[motor_id].targetPosition = motors[motor_id].currentPosition + degrees;
+    //Deactivate freerun mode
+    motors[motor_id].freeRunMode = 0;
+    //Let the engine run
+    if(motors[motor_id].targetPosition > motors[motor_id].currentPosition)
+    {
+        MOTOR_set_speed(motor_id, 100);
+    }
+    if(motors[motor_id].targetPosition < motors[motor_id].currentPosition)
+    {
+        MOTOR_set_speed(motor_id, -100);
+    }
+}
+
+void CLI_MOTOR_rotate(const char* pArguments)
+{
+    char aArgument0[10];
+    char aArgument1[10];
+    int len0 = TOOL_parseArgument(pArguments, aArgument0);
+    int len1 = TOOL_parseArgument(&pArguments[len0], aArgument1);
+    MOTOR_rotate(atoi(aArgument0), atoi(aArgument1));
 }
 
 void MOTOR_print(int motor_id)

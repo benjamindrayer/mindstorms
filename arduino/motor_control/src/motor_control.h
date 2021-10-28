@@ -20,6 +20,7 @@ typedef struct
     int targetPosition;     //
     int encoderValue;
     int direction;          //direction
+    int freeRunMode;        //freeRunMode
     MOTOR_MotorConfig_t config;     //PinConfiguration
 }
  MOTOR_Motor_t;
@@ -37,7 +38,7 @@ void CLI_MOTOR_set(const char* pArguments);
 #define CLI_MOTOR_SET_CMD_HELP "\
 motor_set [motor_id] [speed] sets the speed of the motor with motor_id\n \
           motor_id: 0,...,n\n \
-          speed: -100,...,100\n"
+          speed: -255,...,255\n"
 #define CLI_MOTOR_SET_CMD_NARGS 2
 
 void CLI_MOTOR_get(const char* pArguments);
@@ -47,4 +48,14 @@ motor_get [motor_id] gets the status of the motor with motor_id\n \
           motor_id: 0,...,n\n"
 #define CLI_MOTOR_GET_CMD_NARGS 1
 
+void CLI_MOTOR_rotate(const char* pArguments);
+#define CLI_MOTOR_ROTATE_CMD_NAME "motor_rotate"
+#define CLI_MOTOR_ROTATE_CMD_HELP "\
+motor_rotate [motor_id] [degree] rotate the axis of motor_id around degred\n \
+          motor_id: 0,...,n \
+          degress: -n,...,n\n"
+#define CLI_MOTOR_ROTATE_CMD_NARGS 2
+
 void MOTOR_updatePosition();
+void MOTOR_set_speed(int motor_id, 
+                     int speed);
