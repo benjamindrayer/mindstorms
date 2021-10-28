@@ -48,27 +48,33 @@ int deltaC(int oldVal, int newVal)
     }
 }
 
-void MOTOR_updatePosition()
+void Motor_update(int motor_id)
 {
-    int val0 = TOOL_readDigital(motors[0].config.pinEncoder0);
-    int val1 = TOOL_readDigital(motors[0].config.pinEncoder1);
+    int val0 = TOOL_readDigital(motors[motor_id].config.pinEncoder0);
+    int val1 = TOOL_readDigital(motors[motor_id].config.pinEncoder1);
     int valueNew = val0<<1 | val1;
-    int d = deltaC(valueNew, motors[0].encoderValue);
-    motors[0].encoderValue = valueNew;
-    motors[0].currentPosition+=d;
-    if(motors[0].freeRunMode==0)
+    int d = deltaC(valueNew, motors[motor_id].encoderValue);
+    motors[motor_id].encoderValue = valueNew;
+    motors[motor_id].currentPosition+=d;
+    if(motors[motor_id].freeRunMode==0)
     {
-        if(motors[0].speed>0 && motors[0].targetPosition >= motors[0].currentPosition)
+        if(motors[motor_id].speed>0 && motors[motor_id].targetPosition <= motors[motor_id].currentPosition)
         {
-            motors[0].freeRunMode = 1;
-            MOTOR_set_speed(0, 0);
+            motors[motor_id].freeRunMode = 1;
+            MOTOR_set_speed(motor_id, 0);
         }
-        if(motors[0].speed<0 && motors[0].targetPosition <= motors[0].currentPosition)
+        if(motors[motor_id].speed<0 && motors[motor_id].targetPosition >= motors[motor_id].currentPosition)
         {
-            motors[0].freeRunMode = 1;
-            MOTOR_set_speed(0, 0);
+            motors[motor_id].freeRunMode = 1;
+            MOTOR_set_speed(motor_id, 0);
         }
     }
+
+}
+
+void MOTOR_updateMotor0(void)
+{
+    Motor_update(0);
 }
 
 void MOTOR_set_speed(int motor_id, 
@@ -145,6 +151,10 @@ void MOTOR_print(int motor_id)
     sprintf(aBuffer, " -speed: %i\n", motors[motor_id].speed);
     TOOL_print(aBuffer);
     sprintf(aBuffer, " -position: %i\n", motors[motor_id].currentPosition);
+    TOOL_print(aBuffer);
+    sprintf(aBuffer, " -target position: %i\n", motors[motor_id].targetPosition);
+    TOOL_print(aBuffer);
+    sprintf(aBuffer, " -free run: %i\n", motors[motor_id].freeRunMode);
     TOOL_print(aBuffer);
     sprintf(aBuffer, " -encoder value: %i %i\n", motors[motor_id].encoderValue & 1, motors[motor_id].encoderValue>>1 & 1);
     TOOL_print(aBuffer);

@@ -52,10 +52,10 @@ void CLI_MOTOR_rotate(const char* pArguments);
 #define CLI_MOTOR_ROTATE_CMD_NAME "motor_rotate"
 #define CLI_MOTOR_ROTATE_CMD_HELP "\
 motor_rotate [motor_id] [degree] rotate the axis of motor_id around degred\n \
-          motor_id: 0,...,n \
+          motor_id: 0,...,n\n \
           degress: -n,...,n\n"
 #define CLI_MOTOR_ROTATE_CMD_NARGS 2
 
-void MOTOR_updatePosition();
+void MOTOR_updateMotor0(void);
 void MOTOR_set_speed(int motor_id, 
                      int speed);

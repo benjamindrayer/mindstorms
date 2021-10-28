@@ -24,8 +24,8 @@ void setup()
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
   MOTOR_config(0, 2, 3, 4, 5, 11);
-  attachInterrupt(digitalPinToInterrupt(2), MOTOR_updatePosition, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(3), MOTOR_updatePosition, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(2), MOTOR_updateMotor0, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(3), MOTOR_updateMotor0, CHANGE);
 }
 
 
